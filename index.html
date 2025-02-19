@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroom</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        const socket = io("http://localhost:3000/"); 
+
+        function sendMessage() {
+            const username = document.getElementById("input-name").value;
+            const message = document.getElementById("input-text").value;
+            if (!username || !message) return;
+
+            socket.emit("chat message", { username, text: message });
+            document.getElementById("input-text").value = "";
+        }
+
+        socket.on("chat message", (data) => {
+            const chatBox = document.getElementById("chat-box");
+            const messageElement = document.createElement("p");
+            messageElement.textContent = `${data.username}: ${data.text}`;
+            chatBox.appendChild(messageElement);
+        });
+
+        function deleteMessage() {
+            document.getElementById("input-text").value = "";
+        }
+
+        function setName(){
+            document.getElementById("input-name").setAttribute("readonly", true);
+        }
+    </script>
+</head>
+<body class="bg-black text-white">
+    <h1 class="text-center mt-5">Chatroom</h1>
+    <div class="my-5 mx-2">
+        <input type="text" name="" id="input-name" class="mr-2 border-1 border-white" placeholder="Enter username..">
+        <button type="button" class="bg-green-800 rounded-lg px-5" onclick="setName()">Set</button>
+        
+    </div>
+    <div class="bg-zinc-800 h-100 my-5 mx-2 flex flex-col items-center">
+        <div class="bg-black border-1 border-white w-9/10 h-80 my-1" id="chat-box">
+            <!--here we make the user messages -->
+        </div>
+        <div class="flex items-center w-9/10 space-x-2">
+            <input class="border-1 border-white h-15 w-8/10 bg-black text-white p-2" 
+                   placeholder="Enter message..." type="text" name="" id="input-text">
+            <button class="bg-green-800 h-15 w-1/10 border-none rounded-lg py-2 text-center" type="button" onclick="sendMessage()">📨</button>
+            <button class="bg-red-800 h-15 w-1/10 border-none rounded-lg py-2 text-center" type="button" onclick="deleteMessage()">🗑️</button>
+        </div>
+    </div>
+        
+    <footer class="my-5">
+        <hr>
+        <h3 class="text-center my-3">Denis Ivanov</h3>
+    </footer>
+</body>
+</html>
