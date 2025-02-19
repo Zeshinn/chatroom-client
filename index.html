@@ -8,11 +8,11 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
         const socket = io("https://chatroom-server-fb6d.onrender.com"); 
-
+        let flag = false;
         function sendMessage() {
             const username = document.getElementById("input-name").value;
             const message = document.getElementById("input-text").value;
-            if (!username || !message) return;
+            if (!username || !message || !flag) return;
 
             socket.emit("chat message", { username, text: message });
             document.getElementById("input-text").value = "";
@@ -31,6 +31,7 @@
 
         function setName(){
             document.getElementById("input-name").setAttribute("readonly", true);
+            flag = true;
         }
     </script>
 </head>
